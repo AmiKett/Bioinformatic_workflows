@@ -25,7 +25,6 @@ workflow SEMINAR {
     ch_samplesheet // channel: samplesheet read in from --input
     main:
 
-    ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
 
     ch_star_index = params.star_index ? channel.value(tuple([id: 'star_index'], file(params.star_index, checkIfExists: true))) : channel.empty()
@@ -96,44 +95,6 @@ workflow SEMINAR {
         ch_multiqc_replace_names,
         ch_multiqc_sample_names
     )
-
-    ch_versions = ch_versions
-        .mix(FASTQC.out.versions_fastqc)
-        .mix(TRIMGALORE.out.versions_trimgalore)
-        .mix(STAR_ALIGN.out.versions_star)
-        .mix(STAR_ALIGN.out.versions_samtools)
-        .mix(STAR_ALIGN.out.versions_gawk)
-        .mix(SALMON_QUANT.out.versions_salmon)
-        .mix(DUPRADAR.out.versions)
-        .mix(QUALIMAP_RNASEQ.out.versions_qualimap)
-        .mix(MULTIQC.out.versions)
-
-    ch_versions_for_collation = ch_versions.map { v ->
-        if (v instanceof List && v.size() >= 3) {
-            def process_name = v[0].toString().tokenize(':')[-1]
-            def tool_name = v[1].toString()
-            def tool_version = v[2].toString()
-            return "${process_name}:\n    ${tool_name}: ${tool_version}"
-        }
-        return v
-    }
-
-    //
-    // Collate and save software versions
-    //
-    softwareVersionsToYAML(ch_versions_for_collation)
-        .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
-            name:  'seminar_software_'  + 'versions.yml',
-            sort: true,
-            newLine: true
-        ).set { ch_collated_versions }
-
-
-    emit:
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
-    collated_versions = ch_collated_versions     // channel: [ path(seminar_software_versions.yml) ]
-
 }
 
 /*
