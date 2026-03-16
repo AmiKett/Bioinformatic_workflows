@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/hs/seminar/master/nextflow_schema.json",
+    "$id": "https://raw.githubusercontent.com/AmiKett/Bioinformatic_workflows/refs/heads/main/nextflow_schema.json",
     "title": "hs/seminar pipeline parameters",
     "description": "nf-core compliant pipeline for RNA-seq data",
     "type": "object",
@@ -28,6 +28,47 @@
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
+                }
+            }
+        },
+        "reference_genome_options": {
+            "title": "Reference genome options",
+            "description": "Reference FASTA, annotation, and index files.",
+            "fa_icon": "fas fa-dna",
+            "type": "object",
+            "properties": {
+                "fasta": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "^.+\\.(fa|fasta)(\\.gz)?$",
+                    "description": "Genome FASTA file."
+                },
+                "gtf": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "^.+\\.(gtf|gff|gff3)(\\.gz)?$",
+                    "description": "Genome annotation in GTF or GFF format."
+                },
+                "transcriptome": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "^.+\\.(fa|fasta|fa.gz|fasta.gz)$",
+                    "description": "Transcriptome FASTA file for Salmon quantification."
+                },
+                "star_index": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "exists": true,
+                    "description": "Directory containing the precomputed STAR index."
+                },
+                "salmon_index": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "exists": true,
+                "description": "Directory containing the precomputed Salmon index."
                 }
             }
         },
@@ -133,6 +174,9 @@
     "allOf": [
         {
             "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/reference_genome_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
