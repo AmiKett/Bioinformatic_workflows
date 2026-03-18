@@ -31,7 +31,6 @@ workflow HS_SEMINAR {
     samplesheet // channel: samplesheet read in from --input
 
     main:
-
     //
     // WORKFLOW: Run pipeline
     //

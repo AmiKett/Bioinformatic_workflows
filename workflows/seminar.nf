@@ -30,7 +30,7 @@ workflow SEMINAR {
     ch_star_index = params.star_index ? channel.value(tuple([id: 'star_index'], file(params.star_index, checkIfExists: true))) : channel.empty()
     ch_gtf = params.gtf ? channel.value(tuple([id: 'annotation'], file(params.gtf, checkIfExists: true))) : channel.empty()
     ch_salmon_index = params.salmon_index ? channel.value(file(params.salmon_index, checkIfExists: true)) : channel.empty()
-    ch_transcriptome = params.transcript_fasta ? channel.value(file(params.transcript_fasta, checkIfExists: true)) : channel.empty()
+    ch_transcriptome = params.transcriptome ? channel.value(file(params.transcriptome, checkIfExists: true)) : channel.empty()
     ch_star_ignore_sjdbgtf = channel.value(params.star_ignore_sjdbgtf ?: false)
     ch_salmon_alignment_mode = channel.value(params.salmon_alignment_mode ?: false)
     ch_salmon_lib_type = channel.value(params.salmon_lib_type ?: false)
